@@ -1,0 +1,70 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Centro">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Nombre" Type="Edm.String" />
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <NavigationProperty Name="Alumnos" Type="Collection(entities.Alumno)" />
+      </EntityType>
+      <EntityType Name="Asignatura">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Nombre" Type="Edm.String" />
+        <Property Name="Creditos" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <NavigationProperty Name="AlumnosAsignatura" Type="Collection(entities.AlumnoAsignatura)" />
+      </EntityType>
+      <EntityType Name="Alumno">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Nombre" Type="Edm.String" />
+        <Property Name="Apellido1" Type="Edm.String" />
+        <Property Name="Apellido2" Type="Edm.String" />
+        <Property Name="FechaNacimiento" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="FechaBaja" Type="Edm.DateTimeOffset" />
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <NavigationProperty Name="Centro" Type="entities.Centro" />
+        <NavigationProperty Name="AlumnoAsignaturas" Type="Collection(entities.AlumnoAsignatura)" />
+      </EntityType>
+      <EntityType Name="AlumnoAsignatura">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <NavigationProperty Name="Alumno" Type="entities.Alumno" />
+        <NavigationProperty Name="Asignatura" Type="entities.Asignatura" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="Microsoft.AspNetCore.Mvc" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="IActionResult" Abstract="true" />
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Function Name="Alumnos({key})/Centro">
+        <ReturnType Type="Microsoft.AspNetCore.Mvc.IActionResult" />
+      </Function>
+      <Function Name="Alumnos({key})/AlumnoAsignaturas">
+        <ReturnType Type="Microsoft.AspNetCore.Mvc.IActionResult" />
+      </Function>
+      <Function Name="Centros({key})/Alumnos">
+        <ReturnType Type="Microsoft.AspNetCore.Mvc.IActionResult" />
+      </Function>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Centros" EntityType="entities.Centro">
+          <NavigationPropertyBinding Path="Alumnos" Target="Alumnos" />
+        </EntitySet>
+        <EntitySet Name="Asignaturas" EntityType="entities.Asignatura" />
+        <EntitySet Name="Alumnos" EntityType="entities.Alumno">
+          <NavigationPropertyBinding Path="Centro" Target="Centros" />
+        </EntitySet>
+        <FunctionImport Name="Alumnos({key})/Centro" Function="Default.Alumnos({key})/Centro" IncludeInServiceDocument="true" />
+        <FunctionImport Name="Alumnos({key})/AlumnoAsignaturas" Function="Default.Alumnos({key})/AlumnoAsignaturas" IncludeInServiceDocument="true" />
+        <FunctionImport Name="Centros({key})/Alumnos" Function="Default.Centros({key})/Alumnos" IncludeInServiceDocument="true" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

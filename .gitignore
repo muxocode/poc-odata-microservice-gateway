@@ -3,3 +3,17 @@
 ################################################################################
 
 /.vs/ODATA
+/NuGet/crossapp/bin/Debug/netstandard2.0
+/NuGet/crossapp/obj
+/src/Alumnos.api/bin/Debug/netcoreapp3.1
+/src/Alumnos.api/obj
+/src/api/bin/Debug/netcoreapp3.1
+/src/api/obj
+/src/data/bin/Debug/netstandard2.0
+/src/data/obj
+/src/entities/bin/Debug/netstandard2.0
+/src/entities/obj
+/src/gateway.api/bin/Debug/netcoreapp3.1
+/src/gateway.api/obj
+/test/host.test/bin/Debug/netcoreapp3.1
+/test/host.test/obj
