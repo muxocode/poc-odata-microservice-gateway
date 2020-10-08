@@ -50,9 +50,11 @@ namespace host.domain
         {
             return services
                 //Actions
-
+                .AddTransient<IInsertAction<Centro>, action.Centro.CheckNameAction>()
+                .AddTransient<IUpdateAction<Centro>, action.Centro.CheckNameAction>()
                 //Rules
-
+                .AddTransient<IRule<Centro>, rules.Centro.NameFillRule>()
+                .AddTransient<IRule<Centro>, rules.Centro.NameLengthRule>()
                 //RuleProcessor
                 .AddTransient<IRuleProcessor<Centro>, RuleProcessor<Centro>>()
 

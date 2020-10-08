@@ -154,10 +154,21 @@ namespace host
 
             app.UseAuthorization();
 
+            /*
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            */
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+
+                app.UseCors(builder =>
+                            builder.WithOrigins("http://localhost:3000")
+                            .WithMethods("GET", "POST", "DELETE", "PUT", "PATCH"));
+            }
 
             app.UseMvc(routeBuilder =>
             {

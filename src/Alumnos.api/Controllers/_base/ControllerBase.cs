@@ -34,7 +34,7 @@ namespace host.Controllers._base
         {
             var text = $"Error on {name} in {this.Request.Path}";
             this.Logger.LogError(text, ex);
-            return BadRequest(text);
+            return BadRequest(ex.Message);
         }
 
         // GET

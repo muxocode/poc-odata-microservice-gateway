@@ -45,6 +45,8 @@ namespace host.domain.repostory._base
                 .ToList()
                 .ForEach(x=>this.UnitOfWork.AddPendingAction(x));
 
+            item.Id = Guid.NewGuid();
+
             this.Context.Set<T>().Add(item);
         }
 
