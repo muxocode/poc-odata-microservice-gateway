@@ -5,6 +5,8 @@
 ![File3](doc/img/file3.png)
 ##TODO
 Además de IRules y IActions también sería bueno que tuvieran ITRANSFORMS
+## Pruebas
+https://www.getpostman.com/collections/e93903519b2d848e88f2
 ## REFS
 https://www.odata.org/documentation/odata-version-2-0/uri-conventions/
 https://docs.microsoft.com/en-us/odata/
