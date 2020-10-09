@@ -7,6 +7,7 @@ using entities;
 using host.domain;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,7 +17,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OData.Edm;
+using Microsoft.OpenApi.Models;
 
 namespace host
 {
@@ -33,17 +36,19 @@ namespace host
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("Alexia");
-            ILoggerFactory MyLoggerFactory= LoggerFactory.Create(builder => { builder.AddConsole(); });
+            ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-            services.AddDbContext<AlexiaLightContext>(builder => {
+            services.AddDbContext<AlexiaLightContext>(builder =>
+            {
                 builder
                 .UseLoggerFactory(MyLoggerFactory);
             });
 
-            services.AddDbContext<AlexiaContext>(builder => {
+            services.AddDbContext<AlexiaContext>(builder =>
+            {
                 builder
                 .UseLoggerFactory(MyLoggerFactory)
-                .UseSqlServer(connectionString, b=>b.MigrationsAssembly(this.GetType().Assembly.FullName));
+                .UseSqlServer(connectionString, b => b.MigrationsAssembly(this.GetType().Assembly.FullName));
             });
 
             //Añadimos el IOC de Alumno
@@ -58,7 +63,31 @@ namespace host
             });
 
             services.AddOData();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+
+
+            services.AddMvcCore(options =>
+            {
+                foreach (var outputFormatter in
+                    options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ =>
+                    _.SupportedMediaTypes.Count == 0))
+                {
+                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+                foreach (var inputFormatter in
+                    options.InputFormatters.OfType<ODataInputFormatter>().Where(_ =>
+                    _.SupportedMediaTypes.Count == 0))
+                {
+                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo MS + POA", Version = "v1" });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -170,10 +199,17 @@ namespace host
                             .WithMethods("GET", "POST", "DELETE", "PUT", "PATCH"));
             }
 
-            app.UseMvc(routeBuilder =>
+            app.UseEndpoints(e =>
             {
-                routeBuilder.Select().Filter().Count().Expand().OrderBy().MaxTop(100);
-                routeBuilder.MapODataServiceRoute("api", "api", GetEdmModel());
+                e.MapControllers();
+                e.Select().Filter().Count().Expand().OrderBy().MaxTop(100);
+                e.MapODataRoute("api", "api", GetEdmModel());
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo MS + POA");
             });
 
             IEdmModel GetEdmModel()

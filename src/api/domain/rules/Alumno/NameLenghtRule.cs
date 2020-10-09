@@ -10,7 +10,7 @@ namespace host.domain.rules.Alumno
     {
         public async Task<bool> Check(entities.Alumno obj)
         {
-            if (obj.Nombre.Length < 5)
+            if (obj.Nombre?.Length < 5)
             {
                 //TODO: Los textos deben ir por recursos
                 throw new RuleException("El nombre debe medir más de 5");

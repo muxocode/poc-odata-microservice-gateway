@@ -1,12 +1,14 @@
 ﻿using crossapp.action;
 using crossapp.repository;
 using crossapp.rule;
+using crossapp.transformation;
 using crossapp.unitOfWork;
 using entities;
 using host.domain.action.Alumno;
 using host.domain.repostory._base;
 using host.domain.rules;
 using host.domain.rules.Alumno;
+using host.domain.transformation.Alumno;
 using host.domain.unitofwork;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +40,9 @@ namespace host.domain
                 .AddTransient<IRule<Alumno>, BirthJuniorRule>()
                 .AddTransient<IRule<Alumno>, NameFillRule>()
                 .AddTransient<IRule<Alumno>, NameLenghtRule>()
+
+                //Transformations
+                .AddTransient<ITransformation<Alumno>, SetCentroTransform>()
 
                 //RuleProcessor
                 .AddTransient<IRuleProcessor<Alumno>, RuleProcessor<Alumno>>()

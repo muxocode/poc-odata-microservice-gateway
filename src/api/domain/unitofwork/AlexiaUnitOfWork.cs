@@ -37,7 +37,7 @@ namespace host.domain.unitofwork
             }
         }
 
-        public async Task AddPendingAction(Action action)
+        public async Task AddDBAction(Action action)
         {
             this.Actions.Add(action);
         }

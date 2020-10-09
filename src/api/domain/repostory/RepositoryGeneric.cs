@@ -1,5 +1,6 @@
 ﻿using crossapp.action;
 using crossapp.rule;
+using crossapp.transformation;
 using crossapp.unitOfWork;
 using data;
 using System;
@@ -17,6 +18,7 @@ namespace host.domain.repostory._base
         public IEnumerable<IInsertAction<T>> InsertActions { get; }
         public IEnumerable<IUpdateAction<T>> UpdateActions { get; }
         public IEnumerable<IDeleteAction<T>> DeleteActions { get; }
+        public IEnumerable<ITransformation<T>> Transformations { get; }
         public IUnitOfWork UnitOfWork { get; }
 
         public RepositoryGeneric(
@@ -25,6 +27,7 @@ namespace host.domain.repostory._base
             IEnumerable<IInsertAction<T>> insertActions, 
             IEnumerable<IUpdateAction<T>> updateActions, 
             IEnumerable<IDeleteAction<T>> deleteActions,
+            IEnumerable<ITransformation<T>> transformations,
             IUnitOfWork unitOfWork
             )
         {
@@ -33,6 +36,7 @@ namespace host.domain.repostory._base
             InsertActions = insertActions;
             UpdateActions = updateActions;
             DeleteActions = deleteActions;
+            Transformations = transformations;
             UnitOfWork = unitOfWork;
         }
 
@@ -40,10 +44,16 @@ namespace host.domain.repostory._base
         {
             await this.RuleProcessor.CheckRules(item);
 
+            var aTask = new List<Task>();
+
             this.InsertActions
                 .Select(x=>x.Create(item))
                 .ToList()
-                .ForEach(x=>this.UnitOfWork.AddPendingAction(x));
+                .ForEach(x=> aTask.Add(this.UnitOfWork.AddDBAction(x)));
+
+            this.Transformations.ToList().ForEach(x => aTask.Add(x.Do(item)));
+
+            Task.WaitAll(aTask.ToArray());
 
             item.Id = Guid.NewGuid();
 
@@ -77,7 +87,7 @@ namespace host.domain.repostory._base
             this.DeleteActions
                 .Select(x => x.Create(obj))
                 .ToList()
-                .ForEach(x => this.UnitOfWork.AddPendingAction(x));
+                .ForEach(x => this.UnitOfWork.AddDBAction(x));
 
             this.Context.Set<T>().Remove(obj);
         }
@@ -86,10 +96,17 @@ namespace host.domain.repostory._base
         {
             await this.RuleProcessor.CheckRules(obj);
 
+            var aTask = new List<Task>();
+
+
             this.UpdateActions
                 .Select(x => x.Create(obj))
                 .ToList()
-                .ForEach(x => this.UnitOfWork.AddPendingAction(x));
+                .ForEach(x => aTask.Add(this.UnitOfWork.AddDBAction(x)));
+
+            this.Transformations.ToList().ForEach(x => aTask.Add(x.Do(obj)));
+
+            Task.WaitAll(aTask.ToArray());
 
             this.Context.Set<T>().Update(obj);
         }

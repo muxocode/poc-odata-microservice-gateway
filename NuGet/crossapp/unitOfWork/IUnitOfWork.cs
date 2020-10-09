@@ -19,8 +19,7 @@ namespace crossapp.unitOfWork
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        Task AddPendingAction(Action action);
-
+        Task AddDBAction(Action action);
 
         //TODO: Se puede añazir un DiscardChanges, aunque es una práctica un tanto fea
     }

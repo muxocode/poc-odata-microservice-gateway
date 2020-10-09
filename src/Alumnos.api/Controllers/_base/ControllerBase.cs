@@ -13,8 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace host.Controllers._base
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [EnableQuery()]
+    [ApiExplorerSettings(IgnoreApi = false)]
     public abstract class ControllerBase<T> : ODataController where T : entities._base.EntityBase
     {
         protected AlexiaLightContext DbLightContext { get; }
