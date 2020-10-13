@@ -1,7 +1,10 @@
 # POC ODATA
 ## Arranque
+Para arrancar el proyecto solo se necesita cambiar el connection-string de la bbdd (la bbdd se crea ya que es code first)
+![File8](doc/img/file8.png)
 ### Pruebas a controladores
-https://www.getpostman.com/collections/e93903519b2d848e88f2
+* https://www.getpostman.com/collections/e93903519b2d848e88f2
+* https://localhost:44307/swagger
 ## Arquitectura
 La arquitectura propuesta se basa en los siguientes conceptos:
 * __Api restfull__: Mediante las llamadas GET/POST/PATCH/PUT/DELETE se crea de forma intuitiva toda la funcionalidad
@@ -10,6 +13,7 @@ La arquitectura propuesta se basa en los siguientes conceptos:
 * __.net core__: Dado que tiene su propio motor de IOC, permite inyectar en los diferentes controladores los objetos de dominio, de tal maneta que se separa la arquitectura de la funcionalidad. Por otro lado al poder diferenciarse la capa HOST de la capa API, permite diferentes configuraciones o agrupaciones, aumentando así la capa de diferenciación en DDD.
 * __DDD__: ([ref](https://es.wikipedia.org/wiki/Dise%C3%B1o_guiado_por_el_dominio)) Usando los beneficios de la arquitectura hexagonal, el modelo vendría dado por ainterfaces diseñadas en *crossapps* y cada aplicación implementaría su propio dominio.
 * __POA__: *[Programación orientada a aspectos](https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_aspectos)* (en inglés: aspect-oriented programming) es un paradigma de programación que permite una adecuada modularización de las aplicaciones y posibilita una mejor separación de responsabilidades (Obligación o correspondencia de hacer algo).
+* __CODE FIRST__: El sistema se despliegua automáticamente, y crea/modifica la base de datos en el acto.
 ### Principios de diseño implementados
 * KISS
 * YAGNI
@@ -51,9 +55,26 @@ Mediante el IOC, se establacen las siguientes interfaces
 
 
 ### Proyectos en este entorno
+#### NuGets
 ![File7](doc/img/file7.png)
+* CrossApp: Interfaces que hacen de modelo, sirve para la comunicación entre todos los NuGets y aplicativos
+* Entities: Entidades de base de datos
+#### MicroServicio
+![File9](doc/img/file9.png)
+Dado que estamos en .net core, nos permite diferenciar entre el host y los controladores. De este modo podemos tener diferentes HOST con diferenets configuraciones o agrupaciones.
+* Data: Contiene el contexto de "Entity Framework", tanto el cliente ligero como el pesado
+* Alumnos.api: Se generan los controladores (Todos heredan de una clase BASE, por lo que le cñodigo es mínimo o en *override*)
+* Host: Contiene la inyección de dependencias (y el dominio) que se realiza en el *startup.cs*
+![File10](doc/img/file10.png)
+NOTA: El dominio podría ir en un paquete a parte y cargarlo dirante el proceso de DevOps
+#### GateWay
+Prueba de concepto de *api gateway* que permite fusionar varios microservicios
 
-## Cómo crear referencias a un servicio ODATA
+Se han creado varias queries como prueba de concepto
+
+![File11](doc/img/file11.png)
+
+##### Cómo crear referencias a un servicio ODATA
 ![File1](doc/img/file1.png)
 ![File2](doc/img/file2.png)
 ![File3](doc/img/file3.png)
@@ -61,7 +82,36 @@ Mediante el IOC, se establacen las siguientes interfaces
 ## Beneficios
 * __IOC__: Dada la arquitectura propuesta, los paquetes de reglas/transformaciones/acciones se pueden desplegar como un punto de DevOps, de tal manera que se pueden implementar a parte.
 * __AGILE__: El modelo presenta una "agilidad" sin igual gracias a la suma de POA + IOC + ODATA
+* __Code First__: El despliegue es automático, ideal para levantar y "tirar" microservicios
+
+## TODO
+* Que los archivos de MIGRATION de Code-first vayan dentro del proyecto de data
+
+## Tiempos estimados
+En este apartado se pretende hacer una estimación de tiempo (lo más real posible) para terminar de entender los beneficios del modelo.
+* ¿Qué hago si necesito añadir un nuevo controlador y una nueva entidad?
+1. Creamos la entidad en *entities*
+2. Añadimos la entidad en *data*, a modo de colección en el context
+3. Lanzamos una nueva migración con *"add-migration XXX"* 
+4. Creamos un controlador en *alumnos.api* y que hereda de base
+5. Creamos las reglas, acciones y transformaciones en *host*, y añadimos la inyección en *host/startup.cs*
+__TOTAL:__ *max 1 hora* (con despliegue de base de datos incluido)
+
+* ¿Qué hago si necesito añadir una nueva regla de comprobación antes de guardar?
+1. Añadimos la regla en *host/domain/\<entity>/rules*
+2. Añadimos la inyección en *host/domain/extension*
+__TOTAL:__ *max 10 min*
+
+* ¿Qué hago si necesito añadir una una nueva acción sobre una entidad, por ejemplo, modificar la fecha de acceso?
+1. Añadimos la transformación en *host/domain/\<entity>/transformations*
+2. Añadimos la inyección en *host/domain/extension*
+__TOTAL:__ *max 10 min*
+
+* ¿Qué hago si necesito añadir un nuevo campo en una tabla?
+1. Modificamos la entidad en *entities*
+2. Lanzamos una nueva migración con *"add-migration XXX"* 
+__TOTAL:__ *max 10 min* (con despliegue de base de datos incluido)
 
 ## REFS
-https://www.odata.org/documentation/odata-version-2-0/uri-conventions/
-https://docs.microsoft.com/en-us/odata/
+* https://www.odata.org/documentation/odata-version-2-0/uri-conventions/
+* https://docs.microsoft.com/en-us/odata/
