@@ -48,13 +48,13 @@ Mediante el IOC, se establacen las siguientes interfaces
 * Se ejecutan las reglas
 * Se aplican las transformaciones
 * Se añaden las acciones al unitOfWork
-3. Se lanza UnitOfWork, que engloba los cambios sobre BBDD y las acciones añadidas desde el reporitorio
+3. Se lanza UnitOfWork, que engloba los cambios sobre BBDD y las acciones añadidas desde el repositorio
 
 ##### 2.3.2.3.DELETE
 ![File6](doc/img/file6.png)
 1. El controlador pide al __repositorio__ que borre una nueva entidad
 * Se añaden las acciones al unitOfWork
-3. Se lanza UnitOfWork, que engloba los cambios sobre BBDD y las acciones añadidas desde el reporitorio
+3. Se lanza UnitOfWork, que engloba los cambios sobre BBDD y las acciones añadidas desde el repositorio
 
 
 ### 2.4.Proyectos en este entorno
@@ -90,6 +90,8 @@ Se han creado varias queries como prueba de concepto
 
 ## 4.TODO
 * Que los archivos de MIGRATION de Code-first vayan dentro del proyecto de data
+* Temas de autenticación y permisos
+* Temas de identificación del usuario
 
 ## 5.Estimación de tiempos
 En este apartado se pretende hacer una estimación de tiempo (lo más real posible) para terminar de entender los beneficios del modelo.
