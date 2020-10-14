@@ -2,6 +2,8 @@
 ## 1.Arranque
 Para arrancar el proyecto solo se necesita cambiar el connection-string de la bbdd (la bbdd se crea ya que es code first)
 ![File8](doc/img/file8.png)
+Ya por otro lado, habría que arrancar los dos proyectos que se indican a continuación
+![File12](doc/img/file12.png)
 ### 1.1.Pruebas a controladores
 * https://www.getpostman.com/collections/e93903519b2d848e88f2
 * https://localhost:44307/swagger
