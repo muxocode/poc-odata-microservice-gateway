@@ -101,22 +101,22 @@ En este apartado se pretende hacer una estimación de tiempo (lo más real posible
 3. Lanzamos una nueva migración con *"add-migration XXX"* 
 4. Creamos un controlador en *alumnos.api* y que hereda de base
 5. Creamos las reglas, acciones y transformaciones en *host*, y añadimos la inyección en *host/startup.cs*
-__TOTAL:__ *max 1 hora* (con despliegue de base de datos incluido)
+<br/>__TOTAL:__ *max 1 hora* (con despliegue de base de datos incluido)
 
 * ¿Qué hago si necesito añadir una nueva regla de comprobación antes de guardar?
 1. Añadimos la regla en *host/domain/\<entity>/rules*
 2. Añadimos la inyección en *host/domain/extension*
-__TOTAL:__ *max 10 min*
+<br/>__TOTAL:__ *max 10 min*
 
 * ¿Qué hago si necesito añadir una una nueva acción sobre una entidad, por ejemplo, modificar la fecha de acceso?
 1. Añadimos la transformación en *host/domain/\<entity>/transformations*
 2. Añadimos la inyección en *host/domain/extension*
-__TOTAL:__ *max 10 min*
+<br/>__TOTAL:__ *max 10 min*
 
 * ¿Qué hago si necesito añadir un nuevo campo en una tabla?
 1. Modificamos la entidad en *entities*
 2. Lanzamos una nueva migración con *"add-migration XXX"* 
-__TOTAL:__ *max 10 min* (con despliegue de base de datos incluido)
+<br/>__TOTAL:__ *max 10 min* (con despliegue de base de datos incluido)
 
 ## 6.REFS
 * https://www.odata.org/documentation/odata-version-2-0/uri-conventions/
