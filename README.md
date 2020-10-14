@@ -66,7 +66,7 @@ Mediante el IOC, se establacen las siguientes interfaces
 ![File9](doc/img/file9.png)
 Dado que estamos en .net core, nos permite diferenciar entre el host y los controladores. De este modo podemos tener diferentes HOST con diferenets configuraciones o agrupaciones.
 * Data: Contiene el contexto de "Entity Framework", tanto el cliente ligero como el pesado
-* Alumnos.api: Se generan los controladores (Todos heredan de una clase BASE, por lo que le cñodigo es mínimo o en *override*)
+* Alumnos.api: Se generan los controladores (Todos heredan de una clase BASE, por lo que el código es mínimo o en *override*)
 * Host: Contiene la inyección de dependencias (y el dominio) que se realiza en el *startup.cs*
 ![File10](doc/img/file10.png)
 NOTA: El dominio podría ir en un paquete a parte y cargarlo dirante el proceso de DevOps
