@@ -85,10 +85,10 @@ Se han creado varias queries como prueba de concepto
 ![File3](doc/img/file3.png)
 
 ## 3.Beneficios
-* __IOC__: Dada la arquitectura propuesta, los paquetes de reglas/transformaciones/acciones se pueden desplegar como un punto de DevOps, de tal manera que se pueden implementar a parte.
+* __IOC + POA__: Dada la arquitectura propuesta, los paquetes de reglas/transformaciones/acciones se pueden desplegar como un punto de DevOps, de tal manera que se pueden implementar a parte.
 * __AGILE__: El modelo presenta una "agilidad" sin igual gracias a la suma de POA + IOC + ODATA
 * __Code First__: El despliegue es automático, ideal para levantar y "tirar" microservicios, orientado a la eficiencia y a la multiplataforma.
-
+* __.net core_: Orientado a la eficiencia, microservicios y multiplataforma
 
 ## 4.TODO
 * Que los archivos de MIGRATION de Code-first vayan dentro del proyecto de data
